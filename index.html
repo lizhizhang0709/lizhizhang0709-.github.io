@@ -3,7 +3,6 @@ layout: default
 title: Home
 notitle: true
 
-# groups of columns of {roles: list, width: num, image: bool}
 role-tables:
 - - roles: [faculty, postdoc, staff]
     width: 4
@@ -17,57 +16,82 @@ role-tables:
   - roles: [alum]
     width: 7
     image: false
-
 ---
 
-<div class="jumbotron">
-    <p>
-        <b>肖航课题组</b>开发了首个<b>基于字符串的可逆晶体表示法: SLICES</b>,实现了生成式AI驱动的<b>Text2Crystal</b>。SLICES有望成为AI驱动的晶体材料逆向设计的标准工具,即<b>晶体材料的"SMILES"</b>。 
-    </p>
-    <p>
-    The <b>XIAO Research Group</b> developed the first <b>string-based invertible, invariant crystallographic representation: SLICES</b>, achieving <b>Text2Crystal</b> powered by generative AI. SLICES has the potential to become a standard tool for <i> in-silico </i> materials discovery, i.e. "SMILES" for crystal structures.
-    </p>
+<!-- 保留原有样式，新增自定义优化样式（最后加载，优先级最高） -->
+<link rel="stylesheet" href="{{ site.baseurl }}/css/bootstrap.min.css">
+<link rel="stylesheet" href="{{ site.baseurl }}/css/group.scss">
+<link rel="stylesheet" href="{{ site.baseurl }}/css/print.css">
+<link rel="stylesheet" href="{{ site.baseurl }}/css/custom-optimize.css">
+
+<!-- Logo头部（核心：images/ln-logo.png路径） -->
+<div class="header-logo">
+  <img src="{{ site.baseurl }}/images/ln-logo.png" alt="岭南大学logo">
+  <h1>肖航课题组</h1>
 </div>
 
-<section>
-    <h2>News</h2>
-    <ul class="news list-unstyled">
-        {% for post in site.posts limit: site.front_page_news %}
-            {% include news-item.html item=post %}
-        {% endfor %}
-    </ul>
-    {% assign numposts = site.posts | size %}
-    {% if numposts >= 1 %}
-        <p>
-            <span class="fa fa-fw fa-history"></span>
-            <a href="{{ site.base }}/blog.html">Older posts&hellip;</a>
-        </p>
-    {% endif %}
+<!-- 课题组简介（保留原有内容，优化结构） -->
+<div class="jumbotron">
+  <p style="font-size: 16px; line-height: 1.8;">
+    <b>肖航课题组</b>开发了首个<b>基于字符串的可逆晶体表示法: SLICES</b>,实现了生成式AI驱动的<b>Text2Crystal</b>。SLICES有望成为AI驱动的晶体材料逆向设计的标准工具,即<b>晶体材料的"SMILES"</b>。 
+  </p>
+  <p style="font-size: 15px; line-height: 1.8; margin-top: 15px;">
+    The <b>XIAO Research Group</b> developed the first <b>string-based invertible, invariant crystallographic representation: SLICES</b>, achieving <b>Text2Crystal</b> powered by generative AI. SLICES has the potential to become a standard tool for <i> in-silico </i> materials discovery, i.e. "SMILES" for crystal structures.
+  </p>
+</div>
+
+<!-- 新闻板块（优化类名，适配CSS） -->
+<section class="news-section">
+  <h2>News</h2>
+  <ul class="news-list">
+    {% for post in site.posts limit: site.front_page_news %}
+      {% include news-item.html item=post %}
+    {% endfor %}
+  </ul>
+  {% assign numposts = site.posts | size %}
+  {% if numposts >= 1 %}
+    <p style="margin-top: 20px; font-size: 14px;">
+      <span class="fa fa-fw fa-history"></span>
+      <a href="{{ site.base }}/blog.html" style="color: #003366; text-decoration: none;">Older posts&hellip;</a>
+    </p>
+  {% endif %}
 </section>
 
-<script
-	type="module"
-	src="https://gradio.s3-us-west-2.amazonaws.com/6.5.1/gradio.js"
-></script>
+<!-- Gradio聊天框（完全保留原有代码，仅加类名适配样式） -->
+<section class="chat-section">
+  <h2>Interactive Chat</h2>
+  <script
+    type="module"
+    src="https://gradio.s3-us-west-2.amazonaws.com/6.5.1/gradio.js"
+  ></script>
+  <gradio-app src="https://lizhizhang0709-chatbox.hf.space"></gradio-app>
+</section>
 
-<gradio-app src="https://lizhizhang0709-chatbox.hf.space"></gradio-app>
-
-
-
-
-
-
-<div id="people">
-    <h2>People</h2>
-    {% for role-table in page.role-tables %}
-        <section class="people row justify-content-between">
-            {% for role-column in role-table %}
-                <div class="col-md-{{ role-column.width }}">
-                    {% for role in role-column.roles %}
-                        {% include role-people.html role=role image=role-column.image %}
-                    {% endfor %}
-                </div>
-            {% endfor %}
-        </section>
-    {% endfor %}
+<!-- 人员板块（优化类名，适配CSS） -->
+<div id="people" class="people-section">
+  <h2>People</h2>
+  {% for role-table in page.role-tables %}
+    <section class="row justify-content-between">
+      {% for role-column in role-table %}
+        <div class="col-md-{{ role-column.width }}">
+          {% for role in role-column.roles %}
+            {% include role-people.html role=role image=role-column.image %}
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </section>
+  {% endfor %}
 </div>
+
+<!-- 回到顶部按钮（提升体验） -->
+<button id="backToTop" style="position: fixed; bottom: 30px; right: 30px; background: #003366; color: #fff; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: none; font-size: 18px; z-index: 9999;">↑</button>
+<script>
+  const backToTopBtn = document.getElementById('backToTop');
+  window.onscroll = function() {
+    backToTopBtn.style.display = (document.body.scrollTop > 300) ? "block" : "none";
+  };
+  backToTopBtn.onclick = function() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  };
+</script>
