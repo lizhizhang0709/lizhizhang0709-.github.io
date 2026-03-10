@@ -1,107 +1,127 @@
-/* ========== 岭南大学logo + 页面布局优化（基于Bootstrap适配） ========== */
-/* 全局基础优化（兼容Bootstrap） */
+/* ========== 岭南大学logo + 页面布局优化（兼容Bootstrap） ========== */
+/* 全局基础：统一字体、居中、柔和背景 */
 body {
   font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
   color: #333;
-  line-height: 1.6;
+  line-height: 1.8;
   max-width: 1200px;
-  margin: 0 auto !important; /* 覆盖Bootstrap默认margin，页面居中 */
+  margin: 0 auto !important;
   padding: 0 20px;
-  background-color: #F9F9F9;
+  background-color: #F8F9FA; /* 接近Bootstrap默认，更柔和 */
 }
 
-/* logo头部样式（适配Bootstrap布局，岭南大学校色） */
+/* Logo头部：校色+居中+间距优化 */
 .header-logo {
   display: flex;
   align-items: center;
-  padding: 30px 0;
-  border-bottom: 2px solid #003366; /* 岭南大学校色 */
+  justify-content: flex-start; /* Logo居左，标题紧跟 */
+  padding: 25px 0;
+  border-bottom: 3px solid #003366; /* 岭南大学校色 */
   margin-bottom: 40px;
+  background-color: #fff;
+  padding-left: 15px;
+  border-radius: 8px 8px 0 0;
 }
 .header-logo img {
-  width: 80px;
+  width: 75px; /* 适配页面比例 */
   height: auto;
   margin-right: 20px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 .header-logo h1 {
-  font-size: 32px;
+  font-size: 30px;
   color: #003366;
   font-weight: 700;
-  margin: 0; /* 清除Bootstrap默认margin */
+  margin: 0;
+  letter-spacing: 1px; /* 标题字间距更美观 */
 }
 
-/* 模块卡片化（基于Bootstrap的jumbotron优化） */
-.jumbotron {
-  padding: 30px !important;
-  border-radius: 8px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 30px !important;
-  background-color: #FFFFFF !important;
-}
-
-/* 新闻/人员/聊天模块样式统一 */
-.news-section, .chat-section, .people-section {
+/* 模块统一卡片化：阴影+圆角+间距 */
+.jumbotron, .news-section, .chat-section, .people-section {
   background: #FFFFFF;
   padding: 30px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 30px;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05); /* 轻微阴影，不突兀 */
+  margin-bottom: 35px;
+  border: 1px solid #eee;
 }
 
-/* 标题样式（岭南大学辅助色点缀） */
+/* 标题样式：校色+侧边线，增强层次感 */
 h2 {
   color: #003366;
-  border-left: 4px solid #FDB913; /* 岭南大学辅助色 */
-  padding-left: 10px;
-  margin-bottom: 20px !important;
+  border-left: 5px solid #FDB913; /* 岭南大学辅助色 */
+  padding-left: 12px;
+  margin-bottom: 25px !important;
   font-size: 24px;
+  font-weight: 600;
 }
 
-/* 新闻列表优化 */
+/* 新闻列表优化：清除默认样式，增加hover效果 */
 .news-list {
   list-style: none;
-  padding-left: 0 !important; /* 清除Bootstrap默认内边距 */
+  padding-left: 0 !important;
 }
 .news-list li {
-  padding: 10px 0;
-  border-bottom: 1px dashed #EEEEEE;
+  padding: 12px 0;
+  border-bottom: 1px dashed #e0e0e0;
+  transition: background-color 0.2s;
+}
+.news-list li:hover {
+  background-color: #f5f5f5;
+  padding-left: 8px;
+  border-radius: 4px;
 }
 .news-list li a {
   color: #333;
   text-decoration: none;
-  transition: color 0.3s;
+  font-size: 15px;
 }
 .news-list li a:hover {
   color: #003366;
-  text-decoration: none; /* 清除Bootstrap默认下划线 */
+  text-decoration: none;
 }
 
-/* Gradio聊天框仅适配布局，不修改功能（兼容Bootstrap响应式） */
+/* Gradio聊天框：仅适配布局，不修改功能 */
 .gradio-app {
   width: 100% !important;
-  max-width: 1200px;
+  max-width: 1180px;
   margin: 0 auto !important;
   display: block;
   border-radius: 8px;
-  overflow: hidden;
+  overflow: hidden; /* 去除圆角外的多余部分 */
+  border: 1px solid #eee;
 }
 
-/* 响应式适配（手机端，兼容Bootstrap断点） */
+/* 人员板块：栅格间距优化 */
+.people-section .row {
+  margin: 0 -10px;
+}
+.people-section .col-md-4, .people-section .col-md-8,
+.people-section .col-md-5, .people-section .col-md-7 {
+  padding: 0 10px;
+  margin-bottom: 20px;
+}
+
+/* 响应式适配（手机端） */
 @media (max-width: 768px) {
   .header-logo {
-    padding: 20px 0;
+    padding: 15px 10px;
   }
   .header-logo img {
     width: 60px;
+    margin-right: 15px;
   }
   .header-logo h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
   h2 {
     font-size: 20px;
   }
   .jumbotron, .news-section, .chat-section, .people-section {
-    padding: 20px !important;
+    padding: 20px 15px;
+    margin-bottom: 25px;
+  }
+  .news-list li {
+    padding: 10px 0;
   }
 }
