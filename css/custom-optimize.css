@@ -1,0 +1,107 @@
+/* ========== 岭南大学logo + 页面布局优化（基于Bootstrap适配） ========== */
+/* 全局基础优化（兼容Bootstrap） */
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  max-width: 1200px;
+  margin: 0 auto !important; /* 覆盖Bootstrap默认margin，页面居中 */
+  padding: 0 20px;
+  background-color: #F9F9F9;
+}
+
+/* logo头部样式（适配Bootstrap布局，岭南大学校色） */
+.header-logo {
+  display: flex;
+  align-items: center;
+  padding: 30px 0;
+  border-bottom: 2px solid #003366; /* 岭南大学校色 */
+  margin-bottom: 40px;
+}
+.header-logo img {
+  width: 80px;
+  height: auto;
+  margin-right: 20px;
+  border-radius: 4px;
+}
+.header-logo h1 {
+  font-size: 32px;
+  color: #003366;
+  font-weight: 700;
+  margin: 0; /* 清除Bootstrap默认margin */
+}
+
+/* 模块卡片化（基于Bootstrap的jumbotron优化） */
+.jumbotron {
+  padding: 30px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px !important;
+  background-color: #FFFFFF !important;
+}
+
+/* 新闻/人员/聊天模块样式统一 */
+.news-section, .chat-section, .people-section {
+  background: #FFFFFF;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+/* 标题样式（岭南大学辅助色点缀） */
+h2 {
+  color: #003366;
+  border-left: 4px solid #FDB913; /* 岭南大学辅助色 */
+  padding-left: 10px;
+  margin-bottom: 20px !important;
+  font-size: 24px;
+}
+
+/* 新闻列表优化 */
+.news-list {
+  list-style: none;
+  padding-left: 0 !important; /* 清除Bootstrap默认内边距 */
+}
+.news-list li {
+  padding: 10px 0;
+  border-bottom: 1px dashed #EEEEEE;
+}
+.news-list li a {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.news-list li a:hover {
+  color: #003366;
+  text-decoration: none; /* 清除Bootstrap默认下划线 */
+}
+
+/* Gradio聊天框仅适配布局，不修改功能（兼容Bootstrap响应式） */
+.gradio-app {
+  width: 100% !important;
+  max-width: 1200px;
+  margin: 0 auto !important;
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* 响应式适配（手机端，兼容Bootstrap断点） */
+@media (max-width: 768px) {
+  .header-logo {
+    padding: 20px 0;
+  }
+  .header-logo img {
+    width: 60px;
+  }
+  .header-logo h1 {
+    font-size: 24px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+  .jumbotron, .news-section, .chat-section, .people-section {
+    padding: 20px !important;
+  }
+}
