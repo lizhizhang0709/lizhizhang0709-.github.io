@@ -84,12 +84,16 @@ h2 {
 /* Gradio聊天框：仅适配布局，不修改功能 */
 .gradio-app {
   width: 100% !important;
-  max-width: 1180px;
+  max-width: 1180px !important;
   margin: 0 auto !important;
-  display: block;
-  border-radius: 8px;
-  overflow: hidden; /* 去除圆角外的多余部分 */
-  border: 1px solid #eee;
+  display: block !important; /* 仅保留布局适配，不破坏功能 */
+  border-radius: 8px !important;
+  /* 以下是新增：禁止覆盖Gradio内部样式 */
+  all: revert !important; 
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  border-radius: 8px !important;
 }
 
 /* 人员板块：栅格间距优化 */
