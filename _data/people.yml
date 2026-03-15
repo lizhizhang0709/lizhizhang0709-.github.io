@@ -5,14 +5,14 @@ profx:
     display_name: "肖航  Hang Xiao"
     github: xiaohang007
     role: faculty
-    image: /img/people/hang.jpg
+    image: lizhizhang0709-.github.io/img/people/hang.jpg
     bio: 助理教授  Assistant Professor
     webpage: "https://scholars.ln.edu.hk/en/persons/hang-xiao"
 
 scott:
     display_name: "Scott Summers"
     role: staff
-    image: /img/people/scott.png
+    image: lizhizhang0709-.github.io/img/people/scott.png
     bio: aka Cyclops
 
 wolverine:
@@ -29,17 +29,17 @@ wolverine:
 bizhu:
     display_name: "张碧竹 Bizhu Zhang"
     role: grad
-    image: /img/people/bizhu.jpg
+    image: lizhizhang0709-.github.io/img/people/bizhu.jpg
 
 kedeng:
     display_name: "吴克登 Kedeng Wu"
     role: grad
-    image: /img/people/kedeng.jpg
+    image: lizhizhang0709-.github.io/img/people/kedeng.jpg
 
 storm:
     display_name: "虚位以待  We need you!"
     role: grad
-    image: /img/people/need.png
+    image: lizhizhang0709-.github.io/img/people/need.png
 
 
 
