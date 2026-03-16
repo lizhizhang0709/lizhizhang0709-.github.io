@@ -18,202 +18,195 @@ role-tables:
     image: false
 ---
 
-<!-- 引入样式：先Bootstrap，后自定义 -->
+<!-- 只保留最安全、不冲突的样式 -->
 <link rel="stylesheet" href="{{ site.baseurl }}/css/bootstrap.min.css">
-<link rel="stylesheet" href="{{ site.baseurl }}/css/custom.css">
+<link rel="stylesheet" href="{{ site.baseurl }}/css/group.scss">
+<link rel="stylesheet" href="{{ site.baseurl }}/css/print.css">
+<link rel="stylesheet" href="{{ site.baseurl }}/css/custom-optimize.css">
 
-<!-- 1. 头部模块 -->
-<header class="site-header">
-  <div class="site-container">
-    <h1>张力之个人主页</h1>
-  </div>
-</header>
+<!-- 头部 -->
+<div class="header-logo">
+  <img src="{{ site.baseurl }}/images/ln-logo.png" alt="岭南大学logo">
+  <h1>张力之个人主页</h1>
+</div>
 
-<!-- 2. 简介模块 -->
-<section class="intro-section site-section">
-  <div class="site-container">
-    <p>
-      本主页基于<strong>人工智能技术</strong>完成个性化定制，集成智能交互聊天系统与趣味互动游戏，打造集展示、交流、娱乐于一体的现代化个人站点。
+<!-- 简介 -->
+<div class="jumbotron">
+  <p style="font-size: 16px; line-height: 1.8;">
+    本主页基于<strong>人工智能技术</strong>完成个性化定制，集成智能交互聊天系统与趣味互动游戏，打造集展示、交流、娱乐于一体的现代化个人站点。
+  </p>
+  <p style="font-size: 15px; line-height: 1.8; margin-top: 15px;">
+    This personal homepage is personalized using <strong>Artificial Intelligence</strong>, with an intelligent interactive chat system and fun games, creating a modern personal site for display, communication and entertainment.
+  </p>
+</div>
+
+<!-- 新闻 -->
+<section class="news-section">
+  <h2>News</h2>
+  <ul class="news-list">
+    {% for post in site.posts limit: site.front_page_news %}
+      {% include news-item.html item=post %}
+    {% endfor %}
+  </ul>
+  {% assign numposts = site.posts | size %}
+  {% if numposts >= 1 %}
+    <p style="margin-top: 20px; font-size: 14px;">
+      <span class="fa fa-fw fa-history"></span>
+      <a href="{{ site.base }}/blog.html" style="color: #003366; text-decoration: none;">Older posts&hellip;</a>
     </p>
-    <p class="en-text">
-      This personal homepage is personalized using <strong>Artificial Intelligence</strong>, with an intelligent interactive chat system and fun games, creating a modern personal site for display, communication and entertainment.
-    </p>
-  </div>
+  {% endif %}
 </section>
 
-<!-- 3. 新闻模块 -->
-<section class="news-section site-section">
-  <div class="site-container">
-    <h2 class="section-title">News</h2>
-    <ul>
-      {% for post in site.posts limit: site.front_page_news %}
-        {% include news-item.html item=post %}
-      {% endfor %}
-    </ul>
-    {% assign numposts = site.posts | size %}
-    {% if numposts >= 1 %}
-      <p class="older-posts">
-        <span class="fa fa-fw fa-history"></span>
-        <a href="{{ site.base }}/blog.html">Older posts&hellip;</a>
-      </p>
-    {% endif %}
-  </div>
+<!-- ======================
+重点：修复后的聊天功能
+======================= -->
+<section class="chat-section" style="padding: 20px 0;">
+  <h2>Interactive Chat</h2>
+  <div id="chat-container" style="width:100%; min-height:600px;"></div>
+
+  <script type="module">
+    import { mount } from "https://cdn.jsdelivr.net/npm/@gradio/client@1.8.0/dist/index.min.js";
+    mount("https://lizhizhang0709-chatbox.hf.space", "#chat-container");
+  </script>
 </section>
 
-<!-- 4. 交互式聊天模块 -->
-<section class="chat-section site-section">
-  <div class="site-container">
-    <h2 class="section-title">Interactive Chat</h2>
-    <!-- 原生Gradio代码，保留功能 -->
-    <script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/6.5.1/gradio.js"></script>
-    <gradio-app src="https://lizhizhang0709-chatbox.hf.space"></gradio-app>
-  </div>
-</section>
-
-<!-- 5. 贪吃蛇游戏模块 -->
-<section class="game-section site-section">
-  <div class="site-container">
-    <h2 class="section-title">Snake Game (休闲小游戏)</h2>
+<!-- 贪吃蛇游戏 -->
+<section class="snake-game-section">
+  <h2>Snake Game (休闲小游戏)</h2>
+  <div class="snake-container">
     <canvas id="snakeCanvas" width="500" height="400"></canvas>
-    <div>
-      <button onclick="startGame()" class="game-btn">开始游戏</button>
-      <button onclick="pauseGame()" class="game-btn">暂停游戏</button>
-      <button onclick="resetGame()" class="game-btn">重置游戏</button>
+    <div class="snake-controls">
+      <button class="snake-btn" id="startBtn">开始游戏</button>
+      <button class="snake-btn" id="pauseBtn">暂停游戏</button>
+      <button class="snake-btn" id="resetBtn">重置游戏</button>
     </div>
-    <div class="score-text">当前分数：<span id="score">0</span></div>
-    <div class="game-desc">
+    <div class="snake-score">当前分数：<span id="score">0</span></div>
+    <div style="font-size: 12px; color: #666; margin-top: 10px;">
       操作说明：方向键↑↓←→控制蛇移动，吃到黄色食物加分，碰到边界/自身游戏结束
     </div>
-
-    <!-- 游戏逻辑：封装为IIFE，避免全局变量污染 -->
-    <script>
-      (function() {
-        const canvas = document.getElementById('snakeCanvas');
-        const ctx = canvas.getContext('2d');
-        let snake = [{x: 10*20, y: 10*20}, {x: 9*20, y: 10*20}, {x: 8*20, y: 10*20}];
-        let food = {x: 15*20, y: 10*20};
-        let direction = 'right';
-        let isRunning = false;
-        let score = 0;
-        let gameInterval;
-        const grid = 20;
-
-        // 初始化游戏
-        function init() {
-          snake = [{x: 10*20, y: 10*20}, {x: 9*20, y: 10*20}, {x: 8*20, y: 10*20}];
-          food = {x: Math.floor(Math.random()*25)*20, y: Math.floor(Math.random()*20)*20};
-          direction = 'right';
-          score = 0;
-          document.getElementById('score').innerText = score;
-          draw();
-        }
-
-        // 绘制游戏
-        function draw() {
-          ctx.fillStyle = var(--light-bg);
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          
-          // 绘制蛇
-          snake.forEach((seg, i) => {
-            ctx.fillStyle = i===0 ? '#002244' : '#003366';
-            ctx.fillRect(seg.x, seg.y, grid-1, grid-1);
-          });
-
-          // 绘制食物
-          ctx.fillStyle = '#FDB913';
-          ctx.fillRect(food.x, food.y, grid-1, grid-1);
-        }
-
-        // 移动蛇
-        function move() {
-          const head = {...snake[0]};
-          switch(direction) {
-            case 'up': head.y -= grid; break;
-            case 'down': head.y += grid; break;
-            case 'left': head.x -= grid; break;
-            case 'right': head.x += grid; break;
-          }
-          snake.unshift(head);
-
-          // 吃到食物
-          if (head.x === food.x && head.y === food.y) {
-            score += 10;
-            document.getElementById('score').innerText = score;
-            food = {x: Math.floor(Math.random()*25)*20, y: Math.floor(Math.random()*20)*20};
-          } else {
-            snake.pop();
-          }
-
-          // 游戏结束
-          if (head.x <0 || head.x >= canvas.width || head.y <0 || head.y >= canvas.height || 
-              snake.slice(1).some(s => s.x===head.x && s.y===head.y)) {
-            clearInterval(gameInterval);
-            isRunning = false;
-            alert(`游戏结束！分数：${score}`);
-          }
-          draw();
-        }
-
-        // 按键控制
-        document.addEventListener('keydown', e => {
-          if (!isRunning) return;
-          if (e.key === 'ArrowUp' && direction !== 'down') direction = 'up';
-          if (e.key === 'ArrowDown' && direction !== 'up') direction = 'down';
-          if (e.key === 'ArrowLeft' && direction !== 'right') direction = 'left';
-          if (e.key === 'ArrowRight' && direction !== 'left') direction = 'right';
-        });
-
-        // 暴露到全局的函数
-        window.startGame = function() {
-          if (!isRunning) {
-            isRunning = true;
-            gameInterval = setInterval(move, 150);
-          }
-        };
-
-        window.pauseGame = function() {
-          isRunning = !isRunning;
-        };
-
-        window.resetGame = function() {
-          clearInterval(gameInterval);
-          isRunning = false;
-          init();
-        };
-
-        // 页面加载初始化
-        window.onload = init;
-      })();
-    </script>
   </div>
-</section>
 
-<!-- 6. 人员模块 -->
-<section class="people-section site-section">
-  <div class="site-container">
-    <h2 class="section-title">People</h2>
-    {% for role-table in page.role-tables %}
-      <div class="row">
-        {% for role-column in role-table %}
-          <div class="col-md-{{ role-column.width }} role-column">
-            {% for role in role-column.roles %}
-              {% include role-people.html role=role image=role-column.image %}
-            {% endfor %}
-          </div>
-        {% endfor %}
-      </div>
-    {% endfor %}
-  </div>
-</section>
+  <script>
+    const canvas = document.getElementById('snakeCanvas');
+    const ctx = canvas.getContext('2d');
+    let snake = [];
+    let food = {};
+    let direction = 'right';
+    let isGameRunning = false;
+    let score = 0;
+    let gameInterval;
+    const gridSize = 20;
+    const speed = 150;
 
-<!-- 7. 回到顶部按钮模块 -->
-<button onclick="window.scrollTo({top:0, behavior:'smooth'})" id="backToTop">↑</button>
-<script>
-  // 回到顶部逻辑封装
-  (function() {
-    const backToTopBtn = document.getElementById('backToTop');
-    window.onscroll = () => {
-      backToTopBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+    function initGame() {
+      snake = [
+        { x: 10 * gridSize, y: 10 * gridSize },
+        { x: 9 * gridSize, y: 10 * gridSize },
+        { x: 8 * gridSize, y: 10 * gridSize }
+      ];
+      generateFood();
+      direction = 'right';
+      score = 0;
+      document.getElementById('score').textContent = score;
+      isGameRunning = false;
+      drawGame();
+    }
+
+    function generateFood() {
+      food = {
+        x: Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize,
+        y: Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize
+      };
+      snake.forEach(segment => {
+        if (segment.x === food.x && segment.y === food.y) generateFood();
+      });
+    }
+
+    function drawGame() {
+      ctx.fillStyle = '#f8f9fa';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      snake.forEach((seg,i) => {
+        ctx.fillStyle = i===0 ? '#002244' : '#003366';
+        ctx.fillRect(seg.x, seg.y, gridSize-1, gridSize-1);
+      });
+      ctx.fillStyle = '#FDB913';
+      ctx.fillRect(food.x, food.y, gridSize-1, gridSize-1);
+    }
+
+    function moveSnake() {
+      if (!isGameRunning) return;
+      const head = { ...snake[0] };
+      switch(direction) {
+        case 'up': head.y -= gridSize; break;
+        case 'down': head.y += gridSize; break;
+        case 'left': head.x -= gridSize; break;
+        case 'right': head.x += gridSize; break;
+      }
+      snake.unshift(head);
+      if (head.x === food.x && head.y === food.y) {
+        score +=10;
+        document.getElementById('score').textContent = score;
+        generateFood();
+      } else {
+        snake.pop();
+      }
+      if (head.x <0 || head.x >= canvas.width || head.y <0 || head.y >= canvas.height ||
+          snake.slice(1).some(s => s.x===head.x && s.y===head.y)) {
+        clearInterval(gameInterval);
+        isGameRunning = false;
+        alert("游戏结束！分数："+score);
+      }
+      drawGame();
+    }
+
+    document.addEventListener('keydown', e => {
+      if (!isGameRunning) return;
+      if (e.key==='ArrowUp' && direction!=='down') direction='up';
+      if (e.key==='ArrowDown' && direction!=='up') direction='down';
+      if (e.key==='ArrowLeft' && direction!=='right') direction='left';
+      if (e.key==='ArrowRight' && direction!=='left') direction='right';
+    });
+
+    document.getElementById('startBtn').onclick = () => {
+      if (!isGameRunning) {
+        isGameRunning = true;
+        gameInterval = setInterval(moveSnake, speed);
+      }
     };
-  })();
+    document.getElementById('pauseBtn').onclick = () => isGameRunning = !isGameRunning;
+    document.getElementById('resetBtn').onclick = () => {
+      clearInterval(gameInterval);
+      initGame();
+    };
+
+    window.onload = initGame;
+  </script>
+</section>
+
+<!-- 人员 -->
+<div id="people" class="people-section">
+  <h2>People</h2>
+  {% for role-table in page.role-tables %}
+    <section class="row justify-content-between">
+      {% for role-column in role-table %}
+        <div class="col-md-{{ role-column.width }}">
+          {% for role in role-column.roles %}
+            {% include role-people.html role=role image=role-column.image %}
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </section>
+  {% endfor %}
+</div>
+
+<!-- 回到顶部 -->
+<button id="backToTop" style="position:fixed;bottom:30px;right:30px;background:#003366;color:#fff;border:none;border-radius:50%;width:45px;height:45px;cursor:pointer;display:none;font-size:18px;z-index:9999;">↑</button>
+<script>
+  const backToTopBtn = document.getElementById('backToTop');
+  window.onscroll = function() {
+    backToTopBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+  };
+  backToTopBtn.onclick = function() {
+    window.scrollTo({top:0, behavior:'smooth'});
+  };
 </script>
