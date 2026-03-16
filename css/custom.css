@@ -1,0 +1,170 @@
+/* 全局基础样式 */
+:root {
+  --primary-color: #003366; /* 主色 */
+  --secondary-color: #FDB913; /* 辅助色（游戏食物） */
+  --light-bg: #f8f9fa; /* 浅背景 */
+  --text-color: #333; /* 正文色 */
+  --text-light: #666; /* 浅文本色 */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+}
+
+body {
+  color: var(--text-color);
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+/* 容器统一（适配大屏+响应式） */
+.site-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* 模块通用样式 */
+.site-section {
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-md) 0;
+}
+
+.section-title {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* 头部模块 */
+.site-header {
+  text-align: center;
+  padding: var(--spacing-lg) 0;
+  margin-bottom: var(--spacing-md);
+}
+
+.site-header h1 {
+  color: var(--primary-color);
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* 简介模块 */
+.intro-section p {
+  margin-bottom: var(--spacing-md);
+}
+
+.intro-section .en-text {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+/* 新闻模块 */
+.news-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.news-section .older-posts {
+  margin-top: var(--spacing-sm);
+  font-size: 0.875rem;
+  color: var(--primary-color);
+}
+
+/* 聊天模块 */
+.chat-section gradio-app {
+  width: 100%;
+  min-height: 600px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #eee;
+}
+
+/* 游戏模块 */
+.game-section {
+  text-align: center;
+}
+
+.game-section #snakeCanvas {
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  margin-bottom: var(--spacing-md);
+  max-width: 100%;
+  height: auto;
+}
+
+.game-section .game-btn {
+  margin: 0 5px;
+  padding: 8px 15px;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.game-section .game-btn:hover {
+  background: #002244;
+}
+
+.game-section .score-text {
+  font-size: 1rem;
+  color: var(--primary-color);
+  margin: var(--spacing-sm) 0;
+}
+
+.game-section .game-desc {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin-top: var(--spacing-sm);
+}
+
+/* 人员模块 */
+.people-section .role-column {
+  margin: var(--spacing-sm) 0;
+  min-width: 200px;
+}
+
+/* 回到顶部按钮 */
+#backToTop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  display: none;
+  font-size: 18px;
+  z-index: 9999;
+  transition: background 0.3s;
+}
+
+#backToTop:hover {
+  background: #002244;
+}
+
+/* 响应式适配（移动端） */
+@media (max-width: 768px) {
+  .site-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+
+  .chat-section gradio-app {
+    min-height: 400px;
+  }
+
+  .game-section #snakeCanvas {
+    width: 100%;
+  }
+}
