@@ -18,29 +18,19 @@ role-tables:
     image: false
 ---
 
-<!-- 保留原有样式，新增自定义优化样式（最后加载，优先级最高） -->
+<!-- 只保留最安全、不冲突的样式 -->
 <link rel="stylesheet" href="{{ site.baseurl }}/css/bootstrap.min.css">
 <link rel="stylesheet" href="{{ site.baseurl }}/css/group.scss">
 <link rel="stylesheet" href="{{ site.baseurl }}/css/print.css">
 <link rel="stylesheet" href="{{ site.baseurl }}/css/custom-optimize.css">
 
-<!-- Logo头部 + 新增个人图片 -->
+<!-- 头部 -->
 <div class="header-logo">
   <img src="{{ site.baseurl }}/images/ln-logo.png" alt="岭南大学logo">
   <h1>张力之个人主页</h1>
-  
-  <!-- ========== 新增：个人图片模块 ========== -->
-  <div class="profile-img-container">
-    <!-- 方式1：仓库内图片（推荐）- 需将图片上传到仓库images文件夹，命名为profile.jpg -->
-    <img src="{{ site.baseurl }}/images/profile.jpg" alt="张力之个人照片" class="profile-img">
-    
-    <!-- 方式2：外网图片链接（备用，替换上面src即可）
-    <img src="https://example.com/your-image.jpg" alt="张力之个人照片" class="profile-img">
-    -->
-  </div>
 </div>
 
-<!-- 简介（保留AI个性化定制内容） -->
+<!-- 简介 -->
 <div class="jumbotron">
   <p style="font-size: 16px; line-height: 1.8;">
     本主页基于<strong>人工智能技术</strong>完成个性化定制，集成智能交互聊天系统与趣味互动游戏，打造集展示、交流、娱乐于一体的现代化个人站点。
@@ -50,7 +40,7 @@ role-tables:
   </p>
 </div>
 
-<!-- 新闻板块 -->
+<!-- 新闻 -->
 <section class="news-section">
   <h2>News</h2>
   <ul class="news-list">
@@ -67,17 +57,20 @@ role-tables:
   {% endif %}
 </section>
 
-<!-- Gradio聊天框 -->
-<section class="chat-section">
+<!-- ======================
+重点：修复后的聊天功能
+======================= -->
+<section class="chat-section" style="padding: 20px 0;">
   <h2>Interactive Chat</h2>
-  <script
-    type="module"
-    src="https://gradio.s3-us-west-2.amazonaws.com/6.5.1/gradio.js"
-  ></script>
-  <gradio-app src="https://lizhizhang0709-chatbox.hf.space"></gradio-app>
+  <div id="chat-container" style="width:100%; min-height:600px;"></div>
+
+  <script type="module">
+    import { mount } from "https://cdn.jsdelivr.net/npm/@gradio/client@1.8.0/dist/index.min.js";
+    mount("https://lizhizhang0709-chatbox.hf.space", "#chat-container");
+  </script>
 </section>
 
-<!-- 贪吃蛇游戏模块 -->
+<!-- 贪吃蛇游戏 -->
 <section class="snake-game-section">
   <h2>Snake Game (休闲小游戏)</h2>
   <div class="snake-container">
@@ -125,87 +118,72 @@ role-tables:
         y: Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize
       };
       snake.forEach(segment => {
-        if (segment.x === food.x && segment.y === food.y) {
-          generateFood();
-        }
+        if (segment.x === food.x && segment.y === food.y) generateFood();
       });
     }
 
     function drawGame() {
       ctx.fillStyle = '#f8f9fa';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      snake.forEach((segment, index) => {
-        ctx.fillStyle = index === 0 ? '#002244' : '#003366';
-        ctx.fillRect(segment.x, segment.y, gridSize - 1, gridSize - 1);
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      snake.forEach((seg,i) => {
+        ctx.fillStyle = i===0 ? '#002244' : '#003366';
+        ctx.fillRect(seg.x, seg.y, gridSize-1, gridSize-1);
       });
-
       ctx.fillStyle = '#FDB913';
-      ctx.fillRect(food.x, food.y, gridSize - 1, gridSize - 1);
+      ctx.fillRect(food.x, food.y, gridSize-1, gridSize-1);
     }
 
     function moveSnake() {
       if (!isGameRunning) return;
       const head = { ...snake[0] };
-
-      switch (direction) {
+      switch(direction) {
         case 'up': head.y -= gridSize; break;
         case 'down': head.y += gridSize; break;
         case 'left': head.x -= gridSize; break;
         case 'right': head.x += gridSize; break;
       }
-
       snake.unshift(head);
-
       if (head.x === food.x && head.y === food.y) {
-        score += 10;
+        score +=10;
         document.getElementById('score').textContent = score;
         generateFood();
       } else {
         snake.pop();
       }
-
-      if (
-        head.x < 0 || head.x >= canvas.width ||
-        head.y < 0 || head.y >= canvas.height ||
-        snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)
-      ) {
+      if (head.x <0 || head.x >= canvas.width || head.y <0 || head.y >= canvas.height ||
+          snake.slice(1).some(s => s.x===head.x && s.y===head.y)) {
         clearInterval(gameInterval);
         isGameRunning = false;
-        alert(`游戏结束！你的分数：${score}\n点击'开始游戏'重新游玩`);
+        alert("游戏结束！分数："+score);
       }
-
       drawGame();
     }
 
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
       if (!isGameRunning) return;
-      const key = e.key;
-      if (key === 'ArrowUp' && direction !== 'down') direction = 'up';
-      if (key === 'ArrowDown' && direction !== 'up') direction = 'down';
-      if (key === 'ArrowLeft' && direction !== 'right') direction = 'left';
-      if (key === 'ArrowRight' && direction !== 'left') direction = 'right';
+      if (e.key==='ArrowUp' && direction!=='down') direction='up';
+      if (e.key==='ArrowDown' && direction!=='up') direction='down';
+      if (e.key==='ArrowLeft' && direction!=='right') direction='left';
+      if (e.key==='ArrowRight' && direction!=='left') direction='right';
     });
 
-    document.getElementById('startBtn').addEventListener('click', () => {
+    document.getElementById('startBtn').onclick = () => {
       if (!isGameRunning) {
         isGameRunning = true;
         gameInterval = setInterval(moveSnake, speed);
       }
-    });
-    document.getElementById('pauseBtn').addEventListener('click', () => {
-      isGameRunning = !isGameRunning;
-    });
-    document.getElementById('resetBtn').addEventListener('click', () => {
+    };
+    document.getElementById('pauseBtn').onclick = () => isGameRunning = !isGameRunning;
+    document.getElementById('resetBtn').onclick = () => {
       clearInterval(gameInterval);
       initGame();
-    });
+    };
 
     window.onload = initGame;
   </script>
 </section>
 
-<!-- 人员板块 -->
+<!-- 人员 -->
 <div id="people" class="people-section">
   <h2>People</h2>
   {% for role-table in page.role-tables %}
@@ -221,40 +199,14 @@ role-tables:
   {% endfor %}
 </div>
 
-<!-- 回到顶部按钮 -->
-<button id="backToTop" style="position: fixed; bottom: 30px; right: 30px; background: #003366; color: #fff; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: none; font-size: 18px; z-index: 9999;">↑</button>
+<!-- 回到顶部 -->
+<button id="backToTop" style="position:fixed;bottom:30px;right:30px;background:#003366;color:#fff;border:none;border-radius:50%;width:45px;height:45px;cursor:pointer;display:none;font-size:18px;z-index:9999;">↑</button>
 <script>
   const backToTopBtn = document.getElementById('backToTop');
   window.onscroll = function() {
-    backToTopBtn.style.display = (document.body.scrollTop > 300) ? "block" : "none";
+    backToTopBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
   };
   backToTopBtn.onclick = function() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
+    window.scrollTo({top:0, behavior:'smooth'});
   };
 </script>
-
-<!-- ========== 新增：图片样式（内嵌，确保生效） ========== -->
-<style>
-  /* 个人图片容器：居中，适配布局 */
-  .profile-img-container {
-    text-align: center;
-    margin: 20px 0;
-    width: 100%;
-  }
-  /* 个人图片样式：自适应+校色边框+圆角 */
-  .profile-img {
-    max-width: 300px; /* 最大宽度，避免过大 */
-    width: 100%;      /* 自适应容器宽度 */
-    height: auto;     /* 保持宽高比 */
-    border: 3px solid #003366; /* 校色边框 */
-    border-radius: 10px;       /* 圆角，更美观 */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 轻微阴影，提升质感 */
-  }
-  /* 手机端适配：缩小图片最大宽度 */
-  @media (max-width: 768px) {
-    .profile-img {
-      max-width: 200px;
-    }
-  }
-</style>
